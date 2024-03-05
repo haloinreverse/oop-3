@@ -9,6 +9,8 @@ class TInterface(QMainWindow):
         super().__init__()
         self.setupUi(self)
         self.show()
+        self.save_size_pb.clicked.connect(self.save_size_pb_clicked())
+
 
     def setupUi(self, main_window):
         if not main_window.objectName():
@@ -112,6 +114,8 @@ class TInterface(QMainWindow):
         ___qtablewidgetitem3 = self.tableWidget.verticalHeaderItem(1)
         ___qtablewidgetitem3.setText(QCoreApplication.translate("main_window", u"2", None));
 
+        self.size_le.setText('2')
+
         __sortingEnabled = self.tableWidget.isSortingEnabled()
         self.tableWidget.setSortingEnabled(False)
         ___qtablewidgetitem4 = self.tableWidget.item(0, 0)
@@ -130,4 +134,10 @@ class TInterface(QMainWindow):
         self.save_size_pb.setText(QCoreApplication.translate("main_window", u"\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c", None))
         self.result_label.setText(QCoreApplication.translate("main_window", u"\u0420\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442:", None))
     # retranslateUi
+
+    def save_size_pb_clicked(self):
+        if self.size_le.text() != "":
+            new_size = self.size_le.text()
+            
+
 
