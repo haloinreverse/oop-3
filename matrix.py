@@ -68,7 +68,7 @@ class Matrix:
         lines = [False for x in range(n)]
         for i in range(0, m):
             for j in range(0, n):
-                if (not lines[j]) and (abs(data[j][i]) > 0):
+                if (not lines[j]) and (abs(data[j][i]) > number(0)):
                     break
             if j == n:
                 rank = rank - 1
@@ -77,7 +77,7 @@ class Matrix:
                 for p in range(i + 1, m):
                     data[j][p] = data[j][p] / data[j][i]
                 for k in range(0, n):
-                    if (k != j) and (abs(data[k][i]) > 0):
+                    if (k != j) and (abs(data[k][i]) > number(0)):
                         for p in range(i + 1, m):
                             data[k][p] = data[k][p] - data[j][p] * data[k][i]
         return rank

@@ -1,15 +1,15 @@
 
 class TRational:
     def __init__(self, *args):
-        if isinstance(args, int):
-            self.__num = args
+        if isinstance(args[0], int):
+            self.__num = args[0]
             self.__denom = 1
         elif len(args) == 1:
-            if '/' in args:
-                self.__num = int(args.replace(' ', '').split('/')[0])
-                self.__denom = int(args.replace(' ', '').split('/')[0])
+            if '/' in args[0]:
+                self.__num = int(args[0].replace(' ', '').split('/')[0])
+                self.__denom = int(args[0].replace(' ', '').split('/')[1])
             else:
-                self.__num = int(args.replace(' ', ''))
+                self.__num = int(args[0].replace(' ', ''))
                 self.__denom = 1
         else:
             self.__num = args[0]
@@ -27,6 +27,7 @@ class TRational:
 
     def __abs__(self):
         return TRational(abs(self.__num), self.__denom)
+        # return abs(self.__num) / self.__denom
 
     def __str__(self):
         return f'{self.__num}/{self.__denom}'
@@ -34,16 +35,23 @@ class TRational:
     def __mul__(self, other):
         new_num = self.__num * other.__num
         new_denom = self.__denom * self.__denom
-        return TRational(new_num, new_denom).__reduce()
+        new_number = TRational(new_num, new_denom)
+        new_number.__reduce()
+        return new_number
 
     def __add__(self, other):
-        return TRational(self.__num * other.__denom + other.__num * self.__denom, self.denom * other.__denom).__reduce()
+        new_number = TRational(self.__num * other.__denom + other.__num * self.__denom, self.__denom * other.__denom)
+        new_number.__reduce()
+        return new_number
 
     def __sub__(self, other):
-        return TRational(self.__num * other.__denom - other.__num * self.__denom, self.denom * other.__denom).__reduce()
-
+        new_number = TRational(self.__num * other.__denom - other.__num * self.__denom, self.__denom * other.__denom)
+        new_number.__reduce()
+        return new_number
     def __truediv__(self, other):
-        return TRational(self.__num * other.__denom, self.__denom * other.__num).__reduce()
+        new_number = TRational(self.__num * other.__denom, self.__denom * other.__num)
+        new_number.__reduce()
+        return new_number
 
     ## вспомогательный метод для поиска НОД (используется для сокращения дроби)
     def __nod(self):
@@ -61,3 +69,8 @@ class TRational:
         self.__num = self.__num // nod
         self.__denom = self.__denom // nod
 
+    def __gt__(self, other):
+        if self.__num / self.__denom > other.__num / other.__denom:
+            return True
+        else:
+            return False

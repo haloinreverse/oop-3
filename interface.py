@@ -2,6 +2,7 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 from matrix import Matrix
+from matrix import number
 
 
 class TInterface(QMainWindow):
@@ -10,11 +11,14 @@ class TInterface(QMainWindow):
         super().__init__()
         self.setupUi(self)
         self.show()
-        self.save_size_pb.clicked.connect(self.save_new_size)
         self.__matrix = Matrix()
         self.__size = 2
         self.save_matrix()
-
+        self.save_size_pb.clicked.connect(self.save_new_size)
+        self.save_matrix_pb.clicked.connect(self.save_matrix)
+        self.transpose_pb.clicked.connect(self.transpose)
+        self.det_pb.clicked.connect(self.show_det)
+        self.rank_pb.clicked.connect(self.show_rank)
 
     def setupUi(self, main_window):
         if not main_window.objectName():
@@ -103,12 +107,16 @@ class TInterface(QMainWindow):
         self.retranslateUi(main_window)
 
         QMetaObject.connectSlotsByName(main_window)
+
     # setupUi
 
     def retranslateUi(self, main_window):
         main_window.setWindowTitle(QCoreApplication.translate("main_window", u"Matrix", None))
-        self.size_label.setText(QCoreApplication.translate("main_window", u"\u0420\u0430\u0437\u043c\u0435\u0440:", None))
-        self.det_pb.setText(QCoreApplication.translate("main_window", u"\u041e\u043f\u0440\u0435\u0434\u0435\u043b\u0438\u0442\u0435\u043b\u044c", None))
+        self.size_label.setText(
+            QCoreApplication.translate("main_window", u"\u0420\u0430\u0437\u043c\u0435\u0440:", None))
+        self.det_pb.setText(QCoreApplication.translate("main_window",
+                                                       u"\u041e\u043f\u0440\u0435\u0434\u0435\u043b\u0438\u0442\u0435\u043b\u044c",
+                                                       None))
         ___qtablewidgetitem = self.tableWidget.horizontalHeaderItem(0)
         ___qtablewidgetitem.setText(QCoreApplication.translate("main_window", u"1", None));
         ___qtablewidgetitem1 = self.tableWidget.horizontalHeaderItem(1)
@@ -132,28 +140,35 @@ class TInterface(QMainWindow):
         ___qtablewidgetitem7.setText(QCoreApplication.translate("main_window", u"1", None));
         self.tableWidget.setSortingEnabled(__sortingEnabled)
 
-        self.transpose_pb.setText(QCoreApplication.translate("main_window", u"\u0422\u0440\u0430\u043d\u0441\u043f\u043e\u043d\u0438\u0440\u043e\u0432\u0430\u0442\u044c", None))
-        self.save_matrix_pb.setText(QCoreApplication.translate("main_window", u"\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u043c\u0430\u0442\u0440\u0438\u0446\u0443", None))
+        self.transpose_pb.setText(QCoreApplication.translate("main_window",
+                                                             u"\u0422\u0440\u0430\u043d\u0441\u043f\u043e\u043d\u0438\u0440\u043e\u0432\u0430\u0442\u044c",
+                                                             None))
+        self.save_matrix_pb.setText(QCoreApplication.translate("main_window",
+                                                               u"\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u043c\u0430\u0442\u0440\u0438\u0446\u0443",
+                                                               None))
         self.rank_pb.setText(QCoreApplication.translate("main_window", u"\u0420\u0430\u043d\u0433", None))
-        self.save_size_pb.setText(QCoreApplication.translate("main_window", u"\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c", None))
-        self.result_label.setText(QCoreApplication.translate("main_window", u"\u0420\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442:", None))
+        self.save_size_pb.setText(
+            QCoreApplication.translate("main_window", u"\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c", None))
+        self.result_label.setText(
+            QCoreApplication.translate("main_window", u"\u0420\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442:", None))
+
     # retranslateUi
 
     def save_matrix(self):
+        new_matrix = [[0 for j in range(self.__size)] for i in range(self.__size)]
         for i in range(self.__size):
             for j in range(self.__size):
-                self.__matrix[i][j] = self.tableWidget.item(i, j)
-
-
+                new_matrix[i][j] = number(self.tableWidget.item(i, j).text())
+        self.__matrix.set_data(new_matrix)
 
     def save_new_size(self):
+        self.save_matrix()
         if self.size_le.text() != "":
             new_size = int(self.size_le.text())
             old_size = self.__size
             self.__size = new_size
             self.tableWidget.setColumnCount(self.__size)
             self.tableWidget.setRowCount(self.__size)
-            
 
             new_matrix = [[0 for j in range(new_size)] for i in range(new_size)]
             for i in range(new_size):
@@ -161,9 +176,24 @@ class TInterface(QMainWindow):
                     if (i >= old_size) or (j >= old_size):
                         self.tableWidget.setItem(i, j, QTableWidgetItem())
                         self.tableWidget.item(i, j).setText('0')
+            for i in range(new_size):
+                for j in range(new_size):
+                    new_matrix[i][j] = number(self.tableWidget.item(i, j).text())
+            self.__matrix.set_data(new_matrix)
 
+    def transpose(self):
+        self.save_matrix()
+        self.__matrix.transpose()
+        for i in range(self.__size):
+            for j in range(self.__size):
+                self.tableWidget.item(i, j).setText(str(self.__matrix[i][j]))
 
+    def show_det(self):
+        self.save_matrix()
+        det = self.__matrix.det()
+        self.result_le.setText(str(det))
 
-
-
-
+    def show_rank(self):
+        self.save_matrix()
+        rank = self.__matrix.rank()
+        self.result_le.setText(str(rank))
