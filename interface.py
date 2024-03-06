@@ -1,6 +1,7 @@
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
+from matrix import Matrix
 
 
 class TInterface(QMainWindow):
@@ -9,7 +10,10 @@ class TInterface(QMainWindow):
         super().__init__()
         self.setupUi(self)
         self.show()
-        self.save_size_pb.clicked.connect(self.save_size_pb_clicked())
+        self.save_size_pb.clicked.connect(self.save_new_size)
+        self.__matrix = Matrix()
+        self.__size = 2
+        self.save_matrix()
 
 
     def setupUi(self, main_window):
@@ -135,9 +139,31 @@ class TInterface(QMainWindow):
         self.result_label.setText(QCoreApplication.translate("main_window", u"\u0420\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442:", None))
     # retranslateUi
 
-    def save_size_pb_clicked(self):
+    def save_matrix(self):
+        for i in range(self.__size):
+            for j in range(self.__size):
+                self.__matrix[i][j] = self.tableWidget.item(i, j)
+
+
+
+    def save_new_size(self):
         if self.size_le.text() != "":
-            new_size = self.size_le.text()
+            new_size = int(self.size_le.text())
+            old_size = self.__size
+            self.__size = new_size
+            self.tableWidget.setColumnCount(self.__size)
+            self.tableWidget.setRowCount(self.__size)
             
+
+            new_matrix = [[0 for j in range(new_size)] for i in range(new_size)]
+            for i in range(new_size):
+                for j in range(new_size):
+                    if (i >= old_size) or (j >= old_size):
+                        self.tableWidget.setItem(i, j, QTableWidgetItem())
+                        self.tableWidget.item(i, j).setText('0')
+
+
+
+
 
 
