@@ -131,13 +131,13 @@ class TInterface(QMainWindow):
         __sortingEnabled = self.tableWidget.isSortingEnabled()
         self.tableWidget.setSortingEnabled(False)
         ___qtablewidgetitem4 = self.tableWidget.item(0, 0)
-        ___qtablewidgetitem4.setText(QCoreApplication.translate("main_window", u"1", None));
+        ___qtablewidgetitem4.setText(QCoreApplication.translate("main_window", u"1/1", None));
         ___qtablewidgetitem5 = self.tableWidget.item(0, 1)
-        ___qtablewidgetitem5.setText(QCoreApplication.translate("main_window", u"0", None));
+        ___qtablewidgetitem5.setText(QCoreApplication.translate("main_window", u"0/1", None));
         ___qtablewidgetitem6 = self.tableWidget.item(1, 0)
-        ___qtablewidgetitem6.setText(QCoreApplication.translate("main_window", u"0", None));
+        ___qtablewidgetitem6.setText(QCoreApplication.translate("main_window", u"0/1", None));
         ___qtablewidgetitem7 = self.tableWidget.item(1, 1)
-        ___qtablewidgetitem7.setText(QCoreApplication.translate("main_window", u"1", None));
+        ___qtablewidgetitem7.setText(QCoreApplication.translate("main_window", u"1/1", None));
         self.tableWidget.setSortingEnabled(__sortingEnabled)
 
         self.transpose_pb.setText(QCoreApplication.translate("main_window",
@@ -176,6 +176,7 @@ class TInterface(QMainWindow):
                     if (i >= old_size) or (j >= old_size):
                         self.tableWidget.setItem(i, j, QTableWidgetItem())
                         self.tableWidget.item(i, j).setText('0')
+                
             for i in range(new_size):
                 for j in range(new_size):
                     new_matrix[i][j] = number(self.tableWidget.item(i, j).text())
